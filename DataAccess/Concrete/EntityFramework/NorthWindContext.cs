@@ -16,9 +16,22 @@ namespace DataAccess.Concrete.EntityFramework
             optionsBuilder.UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=Northwind;Trusted_Connection=true");//sqlserver kullanıcaz.//burada hangi veritabanına bağlanacağımızı söyleyecez
         }
 
-        public DbSet<Product> Products { get; set; }//BAĞLAMA
-        public DbSet<Category> Categories { get; set;  }
+        public DbSet<Product> Products { get; set; }//BAĞLADIK
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        //public DbSet<Personel> Personels { get; set; } //şuanda eşleştirebileceği bir database yok. Biz Employee ile eşleitmek istiyoruz
+        public DbSet<Order> Orders { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {   //fluent mapping . olarak devam ettirebilirsin. 28. satırdan ama düzgün olsun diye alt alta yazıyoruz
+            //modelBuilder.HasDefaultSchema("admin");                     //yazmana gerek yok dbo
+            modelBuilder.Entity<Personel>().ToTable("Employees", "dbo");//Employees tablosuna bağlama kodu. default olarak 'dbo' gelir
+            modelBuilder.Entity<Personel>().Property(p => p.id).HasColumnName("EmployeeID");
+            modelBuilder.Entity<Personel>().Property(p => p.Name).HasColumnName("FirstName");
+            modelBuilder.Entity<Personel>().Property(p => p.Surname).HasColumnName("LastName");
+        }
+
 
     }
 

@@ -1,6 +1,7 @@
 ﻿using Business.Concrete;
 using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
+using Entities.Concrete;
 using System;
 
 namespace ConsoleUI
@@ -32,12 +33,24 @@ namespace ConsoleUI
             //inmoery ve entitiyframework alternatif 
 
 
-            ProductManager productManager = new ProductManager(new EfProductDal());
 
-            foreach (var product in productManager.GetByUnitPrice(40,100))
+            PersonelManager personelManager = new PersonelManager(new EfPersonelDal());
+            //personelManager.Add(new Personel { Name = "asd", Surname = "dede" });
+            Personel sil = personelManager.Get(12);
+            personelManager.Delete(sil);
+
+            foreach (var personel in personelManager.GetAll())
             {
-                Console.WriteLine(product.ProductName);
+                Console.WriteLine("{0} --- {1} --- {2}",personel.id, personel.Name,personel.Surname);//MAPPING TAMAMLANDI
             }
+
+
+            //ProductManager productManager = new ProductManager(new EfProductDal());
+
+            //foreach (var product in productManager.GetByUnitPrice(40,100))
+            //{
+            //    Console.WriteLine(product.ProductName);
+            //}
            
 
 

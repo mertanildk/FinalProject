@@ -1,5 +1,7 @@
-﻿using DataAccess.Abstract;
+﻿using Core.DataAccess.EntityFramework;
+using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -10,60 +12,51 @@ using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
 {
-    public class EfProductDal : IProductDal
+    public class EfProductDal : EfEntityRepositoryBase<Product, NorthWindContext>, IProductDal
     {
-        //refaktor =iyileştirme
-        public void Add(Product entity)
+        public List<ProductDetailDto> GetProductDetails()
         {
-            //bir classı newlediğinizde garbage collector belli bir zamanda gelir ve bellekten siler 
-            //using içnie yazılan nesneler using bitince anında garbage collectore geliyor.
-            //neden çünkü context nesnesi biraz pahalı.(/ağır)
-
-            using (NorthWindContext context =new NorthWindContext())//c#'a özel bir yapı //using bittiği anda garbage collector çalışır.
-            {
-                var addedEntity = context.Entry(entity);//entry bu frameworke özel. Git veri kaynağından benim gönderdiğim product'a bir nesne eşleştir.
-                //burada referansı yakaladık
-                addedEntity.State = EntityState.Added;
-                context.SaveChanges();
-            }
-        }
-
-        public void Delete(Product entity)
-        {
+            //şuan contexte ihtiyacımız var 
             using (NorthWindContext context = new NorthWindContext())
             {
-                var deletedEntity = context.Entry(entity);
-                deletedEntity.State = EntityState.Deleted;
-                context.SaveChanges();
-            }
-        }
+                var result = from p in context.Products
+                             join c in context.Categories
+                             on p.CategoryId equals c.CategoryId
+                             select new ProductDetailDto
+                             {
+                                 ProductId = p.ProductId,
+                                 ProductName = p.ProductName,
+                                 CategoryName = c.CategoryName,
+                                 UnitsInStock = p.UnitsInStock
+                             };
 
-        public Product Get(Expression<Func<Product, bool>> filter)
-        {
-            using (NorthWindContext context= new NorthWindContext())
-            {
-                return context.Set<Product>().SingleOrDefault(filter); //STANDART GÖRDÜĞÜMÜZ YERDE GENERİC BASE YAPILIR AMA ONU ŞİMDİ GÖRMEYECEZ
+                return result.ToList();
             }
-        }
 
-        public List<Product> GetAll(Expression<Func<Product, bool>> filter = null)
-        {
-            using (NorthWindContext context=new NorthWindContext())
-            {
-                return filter == null 
-                    ? context.Set<Product>().ToList() 
-                    : context.Set<Product>().Where(filter).ToList();
-            }
-        }
 
-        public void Update(Product entity)
-        {
-            using (NorthWindContext context = new NorthWindContext())
-            {
-                var updatedEntity = context.Entry(entity);
-                updatedEntity.State = EntityState.Modified;//GÜNCELLE demektir
-                context.SaveChanges();
-            }
+
+
         }
     }
 }
+//IProductDal şuanda kızmıyor çünkü IProductDal içersindeki operasyonlar EfEntityRepositoryBase'De var o yüzden kızmazzz
+//EfProductDal  inherit ediliyor
+
+
+//EfEntityRepositoryBase İÇERSİNDE ------ ,IProductDal OPERASYONLARI OLDUĞU İÇİN KIZMIYOR
+//ŞUANDA BÜTÜN VERİTABANI OPERASYONLARI HAZIR.  EfEntityRepositoryBase<Product,NorthWindContext> İÇERİSİNDE HEPSİ
+
+//IProductDal' a ne gerek var ??
+//CEVAP içerisini(interface) ürüne ait özel operasyonları koyaacaz 
+//örneğin ürün kategori tabloalrına join atmak için kulalnılır.
+//bir de business IProductDal'a bağlı
+//
+
+
+
+
+
+
+
+//EntityFramework = EfEntityRepositoryBase<Product,NorthWindContext>
+//bu bir entityFramework

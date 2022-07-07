@@ -1,4 +1,6 @@
-﻿using Entities.Concrete;
+﻿using Core.DataAccess;
+using Entities.Concrete;
+using Entities.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +11,14 @@ namespace DataAccess.Abstract
 {
     public interface IProductDal:IEntityRepository<Product> //DAL HANGİ KATMANA KARŞILIK GELDİĞİNİ ANLATIR 
     {
+
+        List<ProductDetailDto> GetProductDetails(); //Producta özel kod yazabilmemiz için IproductDal var
+
+
         //YANİ PRODUCT TABLOSUNUN DAL'I O DA == DATA ACCESS LAYER 
         //SEKTÖRDE DAL VEYA DAO KULLANILIR İKİSİ DE AYNIDIR.
         //JAVADA GENELDE DAO. AMA .NETDE DE KULLANILIR 
-        //oeprasyonlar (şunu ekle sil kaldır indir  işlemleri)
+        //operasyonlar (şunu ekle sil kaldır indir  işlemleri)
         //interfacelerin operasyonları public kendisi değil 
 
        
@@ -29,3 +35,6 @@ namespace DataAccess.Abstract
 
     }
 }
+
+
+//code refaktoring kodun iyileştirilmesi.

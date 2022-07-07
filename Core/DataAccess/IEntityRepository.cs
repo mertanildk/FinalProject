@@ -1,4 +1,4 @@
-﻿using Entities.Abstract;
+﻿using Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DataAccess.Abstract
+namespace Core.DataAccess //dosyayı taşıdıktan sonra burayı da taşı.
 {
     public interface IEntityRepository<T> where T : class ,IEntity,new()
         //CLASS REFERANS TİP class olan class değil. referans tip demektir şuanda.
@@ -27,3 +27,13 @@ namespace DataAccess.Abstract
        
     }
 }
+//CORE KATMANINDA BAĞIMLILIK OLMAMALI. REFERANS VERMEMELİSİN
+//HER PROJEDE KULLANABİLECEĞİN HERHANGİ BİR PROJEYE BAĞIMLI OLMAYAN HER ŞEYİ CORE İÇİNE ATABİLİRSİN.
+//ÖRNEĞİN ENTITY, NORDWIND'E ÖZEL BİR ŞEY DEĞİL. CORE'A ÖZGÜDÜR. O YÜZDEN CORE İÇİNDE YENİ BİR DOSYA HALİNE GETİREBİLİRZ.
+//İSTEDİĞİM KATMANI BURADA AYRI AYRI KLASÖRLEYİP İMPLEMENTE EDEBİLİRİM ===CORE
+//core bizim evrensel katmanımız. bütün .net projelerimde kullanabilirim anlamına geliyor.
+
+//**************************CORE KATMANI DİĞER KATMANLARI REFERANS ALMAZ**********************************
+//AMAÇ DİĞER PROJELERDE DE KULLANABİLMEK.
+
+//Core içine entityframework açtık. EntityFramework için evrensel bir kod yazacağız

@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Concrete.EntityFramework
-{//Ef nerden geliyor ?? ENTITYFRAMEWORK
-    public class EfCategoryDal : EfEntityRepositoryBase<Category, NorthWindContext>, ICategoryDal //bu kadar
+{
+    public class EfPersonelDal : EfEntityRepositoryBase<Personel, NorthWindContext>,IPersonelDal
     {
-      
+     
     }
 }
