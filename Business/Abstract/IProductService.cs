@@ -11,11 +11,11 @@ namespace Business.Abstract
 {
     public interface IProductService //İŞ KATMANINDA KULLANACAĞIMIZ SRVİS KATMANI 
     {
-        List<Product> GetAll();
-        List<Product> GetAllByCategoryId(int id);
-        List<Product> GetByUnitPrice(decimal min, decimal max);
-        List<ProductDetailDto> GetProductDetails();
-        Product GeyById(int productId);
+        IDataResult<List<Product>> GetAll(); //bir data döndürüyorsa sadece Result yazamayız.
+        IDataResult<List<Product>> GetAllByCategoryId(int id);
+        IDataResult<List<Product>> GetByUnitPrice(decimal min, decimal max);
+        IDataResult<List<Product>> GetProductDetails();
+        IDataResult<Product> GeyById(int productId);
         IResult Add(Product product);
         
         IResult Update(Product product);

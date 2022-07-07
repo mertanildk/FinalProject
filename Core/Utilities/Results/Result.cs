@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Core.Utilities.Results
 {
-    public class Result : IResult
+    public class Result : IResult //SADECE VOİDLER İÇİN BÖYLE.
     { //this(succes) iki parametre gönderen birisi için, this(success) demek git alttaki ctoru da çalıştır demek.
         //this(succes,message) deseydin tekrar aynı ctoru çalıştırırdı.sonsuz döngü gibi bişe olurdu
         public Result(bool success, string message):this(success)//set edilemeyen prop'lar ctor ile set edilebilir.

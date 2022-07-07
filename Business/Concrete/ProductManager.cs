@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.Constants;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using DataAccess.Concrete.InMemory;
@@ -28,12 +29,12 @@ namespace Business.Concrete
         public IResult Add(Product product)
         {
             if (product.ProductName.Length<2)
-            {
-                return new ErrorResult("Ürün ismi minimum 2 karakter olmalı");
+            {//magic strings = bunları böyle yazarsan, bir değişiklik olduğunda her yerden değiştirmek zorunda kalırsn
+                return new ErrorResult(Messages.ProductNameInValid);
             }
 
             _productDal.Add(product);
-            return new SuccessResult("Product is added");
+            return new SuccessResult(Messages.ProductAdded);
         }
 
         public IResult Delete(Product product)
@@ -43,30 +44,30 @@ namespace Business.Concrete
         }
 
         //SOYUT NESLEYLE bağlantı kuracağız ne inmemory ne de ientity geçecek (geçmeyecek)
-        public List<Product> GetAll()
+        public IDataResult<List<Product>> GetAll()
         {
            
-            return _productDal.GetAll();
+            return new DataResult<List<Product>>(_productDal.GetAll(),true,"ürünler listelendi");
         }
 
-        public List<Product> GetAllByCategoryId(int id)
+        public IDataResult<List<Product>> GetAllByCategoryId(int id)
         {
 
             return _productDal.GetAll(p => p.CategoryId == id);
 
         }
 
-        public List<Product> GetByUnitPrice(decimal min, decimal max)
+        public IDataResult<List<Product>> GetByUnitPrice(decimal min, decimal max)
         {
             return _productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max);
         }
 
-        public List<ProductDetailDto> GetProductDetails()
+        public IDataResult<List<Product>> GetProductDetails()
         {
             return _productDal.GetProductDetails();
         }
 
-        public Product GeyById(int productId)
+        public IDataResult<Product> GeyById(int productId)
         {
 
             return _productDal.Get(p => p.ProductId == productId);
