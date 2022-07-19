@@ -15,9 +15,6 @@ namespace ConsoleUI
             //abstact içine referans tutucu interface abstract vb
             //concrete içine 
             //abstact ile uygulamalar arası bağımılılkları minimize edecez 
-
-
-
             //abstract da önce interface oluşmalı 
             //iş yapan classları oluştuluacağı zaman bir interface yoksa 
             //her zaman ama her zaman interfacesini oluştur.
@@ -32,17 +29,33 @@ namespace ConsoleUI
             //alternatif bir teknolojisi olan bir ortamı kodluyorsak orada klasörleme tekniğine gidiyoruz....
             //inmoery ve entitiyframework alternatif 
 
+            ProductManager productManager = new ProductManager(new EfProductDal());
 
+            var result = productManager.GetProductDetails();
 
-            PersonelManager personelManager = new PersonelManager(new EfPersonelDal());
-            //personelManager.Add(new Personel { Name = "asd", Surname = "dede" });
-            Personel sil = personelManager.Get(12);
-            personelManager.Delete(sil);
-
-            foreach (var personel in personelManager.GetAll())
+            if (result.Success)
             {
-                Console.WriteLine("{0} --- {1} --- {2}",personel.id, personel.Name,personel.Surname);//MAPPING TAMAMLANDI
+                foreach (var product in result.Data)
+                {
+                    Console.WriteLine(product.ProductName + " --><-- " + product.CategoryName);
+                }
+
             }
+            else
+            {
+                Console.WriteLine(result.Message);
+            }
+
+
+            //PersonelManager personelManager = new PersonelManager(new EfPersonelDal());
+            ////personelManager.Add(new Personel { Name = "asd", Surname = "dede" });
+            //Personel sil = personelManager.Get(12);
+            //personelManager.Delete(sil);
+
+            //foreach (var personel in personelManager.GetAll())
+            //{
+            //    Console.WriteLine("{0} --- {1} --- {2}",personel.id, personel.Name,personel.Surname);//MAPPING TAMAMLANDI
+            //}
 
 
             //ProductManager productManager = new ProductManager(new EfProductDal());
@@ -51,7 +64,7 @@ namespace ConsoleUI
             //{
             //    Console.WriteLine(product.ProductName);
             //}
-           
+
 
 
 
@@ -75,7 +88,7 @@ namespace ConsoleUI
 
 
 
-            
+
 
 
 
@@ -86,3 +99,20 @@ namespace ConsoleUI
         }
     }
 }
+
+
+//asp.net microsoftun web geliştirme ortamının ve bunları içeren kütüphanelerin toplandığı yapıdır.
+//projeyi ne ile geliştirdin derlerse
+//.net ile veya asp.net ile 
+//.net onun framework'u asp.net ise o framework içerisinde  geliştirebilecğimiz bir proje türünü anlatır
+//asp.net , .net projelerindeki web projelerine verilen isim.
+//wep api ne işe yarıyor
+//api bir restfull mimariyi destekler
+//restfull mimari ile çalışma imkanı sağlar
+
+//restful yapılar karşımıza http protokolü sayesinde geliyor
+//restful --> HTTP --> TCP(KABLOLU) 
+
+//controller, bizim sistemimizi kullanacak clientler(mobil, masaüstü,angiler vb.) hangi operasyonlar için ve nasıl istekte
+//bulunabilir sorularını biz controllers'de yazıyoruz.
+//

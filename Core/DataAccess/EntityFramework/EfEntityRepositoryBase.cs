@@ -72,8 +72,3 @@ namespace Core.DataAccess.EntityFramework
 }
 
 
-//Evrensel bir kod oalcak
-//EntityFramework kullarak EfEntityRepositoryBase oluşur demek 
-
-//yeni bir tablo eklendiğinde tüm operasyonlar için bir daha bir daha yazmaya gerek kalmayacak
-//Bir kere yaz bir daha gerek kalmasın. CORE

@@ -1,10 +1,17 @@
 ﻿using Business.Abstract;
+using Business.CCS;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.AutoFac.Validation;
+using Core.Business;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using DataAccess.Concrete.InMemory;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,27 +21,32 @@ using System.Threading.Tasks;
 
 namespace Business.Concrete
 {
-    public class ProductManager : IProductService//manager görürsen anla ki o iş katmanının somut sınıfı 
+    public class ProductManager : IProductService
     {
-        //bir iş sınıfı başka sınıfları newlemez
 
-        IProductDal _productDal;//injection
-        //bildiği tek şey ıProductDAl olacak.
+        IProductDal _productDal;
+        ICategoryService _categoryService;
 
-        public ProductManager(IProductDal productDal)//injection
+        public ProductManager(IProductDal productDal, ICategoryService categoryService)//Dependency Enjection
         {
             _productDal = productDal;
+            _categoryService = categoryService;
+
         }
 
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
-            if (product.ProductName.Length<2)
-            {//magic strings = bunları böyle yazarsan, bir değişiklik olduğunda her yerden değiştirmek zorunda kalırsn
-                return new ErrorResult(Messages.ProductNameInValid);
+            IResult result = BusinessRules.Run(ChechIfProductNameExists(product.ProductName),
+                ChechIfProductCountOfCategoryCorrect(product.CategoryId),ChechIfCategoryLimitExceded());
+            //kural eğer mevcut kategori  sayısı 15i geçtiyse sisteme yeni ürün eklenemez.
+            if (result != null)
+            {
+                return result;
             }
-
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
+
         }
 
         public IResult Delete(Product product)
@@ -43,34 +55,37 @@ namespace Business.Concrete
             return new Result(true);
         }
 
-        //SOYUT NESLEYLE bağlantı kuracağız ne inmemory ne de ientity geçecek (geçmeyecek)
+
         public IDataResult<List<Product>> GetAll()
         {
-           
-            return new DataResult<List<Product>>(_productDal.GetAll(),true,"ürünler listelendi");
+            if (DateTime.Now.Hour == 22)
+            {
+                return new ErrorDataResult<List<Product>>(Messages.MaintenanceTime);
+            }
+
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(), Messages.ProductsListed);
         }
 
         public IDataResult<List<Product>> GetAllByCategoryId(int id)
         {
 
-            return _productDal.GetAll(p => p.CategoryId == id);
-
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.CategoryId == id));
         }
 
         public IDataResult<List<Product>> GetByUnitPrice(decimal min, decimal max)
         {
-            return _productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max);
+            return new SuccessDataResult<List<Product>>(_productDal.GetAll(p => p.UnitPrice >= min && p.UnitPrice <= max));
         }
 
-        public IDataResult<List<Product>> GetProductDetails()
+        public IDataResult<List<ProductDetailDto>> GetProductDetails()
         {
-            return _productDal.GetProductDetails();
+            return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetails());
         }
 
-        public IDataResult<Product> GeyById(int productId)
+        public IDataResult<Product> GetById(int productId)
         {
 
-            return _productDal.Get(p => p.ProductId == productId);
+            return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
 
         public IResult Update(Product product)
@@ -78,10 +93,33 @@ namespace Business.Concrete
             _productDal.Update(product);
             return new Result(true);
         }
+        private IResult ChechIfProductCountOfCategoryCorrect(int categoryId)
+        {
+            var result = _productDal.GetAll(p => p.CategoryId == categoryId).Count;
+            if (result >= 10)
+            {
+                return new ErrorResult(Messages.ProductCountOfCategoryError);
+            }
+            return new SuccessResult();
+        }
+        private IResult ChechIfProductNameExists(string productName)
+        {
+            bool result = _productDal.GetAll(p => p.ProductName == productName).Any();
+            if (result)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
+            return new SuccessResult();
+        }
+        private IResult ChechIfCategoryLimitExceded()
+        {
+            var result = _categoryService.GetAll();
+
+            if (result.Data.Count>15)
+            {
+                return new ErrorResult(Messages.CategoryLimitExceded);
+            }
+            return new SuccessResult();
+        }
     }
 }
-
-
-//Bir metot sadece bir değer dönürebilir
-//bunu değiştirmek için ENCAPSULATION yapılacak
-//
