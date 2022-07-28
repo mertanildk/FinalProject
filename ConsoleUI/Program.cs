@@ -29,22 +29,22 @@ namespace ConsoleUI
             //alternatif bir teknolojisi olan bir ortamı kodluyorsak orada klasörleme tekniğine gidiyoruz....
             //inmoery ve entitiyframework alternatif 
 
-            ProductManager productManager = new ProductManager(new EfProductDal());
+            //ProductManager productManager = new ProductManager(new EfProductDal());
 
-            var result = productManager.GetProductDetails();
+            //var result = productManager.GetProductDetails();
 
-            if (result.Success)
-            {
-                foreach (var product in result.Data)
-                {
-                    Console.WriteLine(product.ProductName + " --><-- " + product.CategoryName);
-                }
+            //if (result.Success)
+            //{
+            //    foreach (var product in result.Data)
+            //    {
+            //        Console.WriteLine(product.ProductName + " --><-- " + product.CategoryName);
+            //    }
 
-            }
-            else
-            {
-                Console.WriteLine(result.Message);
-            }
+            //}
+            //else
+            //{
+            //    Console.WriteLine(result.Message);
+            //}
 
 
             //PersonelManager personelManager = new PersonelManager(new EfPersonelDal());

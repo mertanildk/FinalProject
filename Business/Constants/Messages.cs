@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Core.Entities.Concrete;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,5 +17,12 @@ namespace Business.Constants
         internal static string ProductCountOfCategoryError="Category count is full";
         internal static string ProductNameAlreadyExists= "Product Name Already Exists";
         internal static string CategoryLimitExceded= "Category Limit Exceded";
+        internal static string AuthorizationDenied= "You have no authority.";
+        internal static string UserRegistered;
+        internal static User UserNotFound;
+        internal static User PasswordError;
+        internal static string SuccessfulLogin;
+        internal static string AccessTokenCreated;
+        internal static string UserAlreadyExists;
     }
 }

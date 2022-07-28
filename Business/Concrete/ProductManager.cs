@@ -1,4 +1,5 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspects.Autofac;
 using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
@@ -34,12 +35,12 @@ namespace Business.Concrete
 
         }
 
+        [SecuredOperation("product.add,admin")]
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
             IResult result = BusinessRules.Run(ChechIfProductNameExists(product.ProductName),
                 ChechIfProductCountOfCategoryCorrect(product.CategoryId),ChechIfCategoryLimitExceded());
-            //kural eğer mevcut kategori  sayısı 15i geçtiyse sisteme yeni ürün eklenemez.
             if (result != null)
             {
                 return result;
