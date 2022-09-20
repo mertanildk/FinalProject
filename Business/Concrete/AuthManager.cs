@@ -69,3 +69,25 @@ namespace Business.Concrete
         }
     }
 }
+
+
+/*public IResult ChangePassword(ChangePasswordDto changePasswordDto)
+{
+    byte[] passwordHash, passwordSalt;
+    var userToCheck = _userService.GetByMail(changePasswordDto.UserEmail).Data;
+    if (userToCheck == null)
+    {
+        return new ErrorDataResult<User>("Email geçersiz");
+    }
+    if (!HashingHelper.VerifyPasswordHash(changePasswordDto.oldPass, userToCheck.PasswordHash, userToCheck.PasswordSalt))
+    {
+        return new ErrorDataResult<User>("Eski şifre geçersiz");
+    }
+    HashingHelper.CreatePasswordHash(changePasswordDto.newPass, out passwordHash, out passwordSalt);
+    userToCheck.PasswordHash = passwordHash;
+    userToCheck.PasswordSalt = passwordSalt;
+    _userService.UpdateHelper(userToCheck);
+
+    return new SuccessResult("Şifre başarıyla değiştirildi");
+
+}*/

@@ -21,7 +21,7 @@ namespace Business.BusinessAspects.Autofac
 
         public SecuredOperation(string roles)
         {
-            _roles = roles.Split(',');//ayır ve arraye a
+            _roles = roles.Split(',');//ayır ve arraye at
             _httpContextAccessor = ServiceTool.ServiceProvider.GetService<IHttpContextAccessor>();
         }
 

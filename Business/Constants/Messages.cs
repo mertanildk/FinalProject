@@ -14,15 +14,15 @@ namespace Business.Constants
         public static string ProductNameInValid = "Product name is not valid";
         public static string MaintenanceTime = "System in Maintenance Time";
         public static string ProductsListed="Products are on the list";
-        internal static string ProductCountOfCategoryError="Category count is full";
-        internal static string ProductNameAlreadyExists= "Product Name Already Exists";
-        internal static string CategoryLimitExceded= "Category Limit Exceded";
-        internal static string AuthorizationDenied= "You have no authority.";
-        internal static string UserRegistered;
-        internal static User UserNotFound;
-        internal static User PasswordError;
-        internal static string SuccessfulLogin;
-        internal static string AccessTokenCreated;
-        internal static string UserAlreadyExists;
+        public static string ProductCountOfCategoryError="Category count is full";
+        public static string ProductNameAlreadyExists= "Product Name Already Exists";
+        public static string CategoryLimitExceded= "Category Limit Exceded";
+        public static string AuthorizationDenied= "You have no authority.";
+        public static string UserRegistered="User Registered";
+        public static string UserNotFound="User not Found";
+        public static string PasswordError="Password Error";
+        public static string SuccessfulLogin= "Successfuly Login";
+        public static string AccessTokenCreated= "Access Token Created";
+        public static string UserAlreadyExists= "User Already Exists";
     }
 }

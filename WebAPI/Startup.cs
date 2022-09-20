@@ -1,8 +1,12 @@
+using Core.DependencyResolvers;
+using Core.Extensions;
+using Core.Utilities.IoC;
 using Core.Utilities.Security.Encryption;
 using Core.Utilities.Security.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -28,9 +32,12 @@ namespace WebAPI
             services.AddControllers();
             //içerisinde data tutmuyorsak kullanýcaz. singleton. 
             //
-            
+            services.AddCors();
+
             //birisi bizden Iproductservice isterse productmanageri ver
             //arka planda bir referans oluþtur. ioc bizim yerimize newliyor
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); core katmanýna CoreModule içine aldýk.
+
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -48,6 +55,11 @@ namespace WebAPI
                     };
                 });
 
+            services.AddDependencyResolvers(new ICoreModule[]//params da yapabilirsin.
+            {
+                new CoreModule() 
+                //farklý modüller de oluþtutursak (,) koyup yayýna ekleyebilirsin new CoreModule(), new AspectModule() gibi
+            });//sadece coreModulü deðil istediðim kadar modulü atabilelim istiyoruz.
 
 
             services.AddSwaggerGen(c =>
@@ -65,6 +77,9 @@ namespace WebAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPI v1"));
             }
+            app.ConfigureCustomExceptionMiddleware();
+            
+            app.UseCors(builder => builder.WithOrigins("http://localhost:4200").AllowAnyHeader());
 
             app.UseHttpsRedirection();
 
